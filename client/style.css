@@ -1,0 +1,162 @@
+body {
+	margin: 0;
+	background-color:#325C74;
+}
+
+p{
+	font-size: 25px;
+}
+
+article {
+	font-size: 20px;
+	text-align: center;
+}
+
+article p {
+	margin: auto;
+	margin-top: 10px;
+	color: #02D784;
+	width: 50%
+}
+
+article a {
+	font-weight: bold;
+	color:#FF7F00;
+}
+
+h1{
+	color:#02D784;
+	font-family: 'Gabriela', serif;
+	font-size:45px;
+	text-align: center;
+}
+
+div{
+	display:block;
+	width:64%;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+canvas{
+	border:1px solid gray;
+	height: 95%;
+	width: 95%;
+}
+
+#audioControls{display:none;}
+
+button{
+	background-color: rgba(128, 128, 128, 0.3);
+	font-family: 'Amaranth', sans-serif;
+	font-size: 24pt;
+	z-index: 1;
+	position: fixed;
+	border-radius: 15px;
+}
+
+button:hover{
+	background-color: #fff;
+}
+
+button:focus{
+	outline: 0;
+}
+
+#StartBut{
+	top: 65%;
+	left: 48%;
+	margin-left: -41px;
+}
+#InstructBut{
+	top: 70%;
+	left: 48%;
+	margin-left: -88px;
+}
+#BackBut{
+	top: 69%;
+	left: 50%;
+	margin-left: -60px;
+}
+#BeginBut{
+	top: 87%;
+	left: 74%;
+}
+#TryBut{
+	top: 900px;
+	left: 800px;
+}
+
+
+/*	--	Resizing Start	--	*/
+@media screen and (max-width: 1700px) {
+	#StartBut{
+		top: 60%;
+	}
+	#InstructBut{
+		top: 65%;
+	}
+	#BackBut{
+		top: 67%;
+	}
+	#BeginBut{
+		top: 85%;
+	}
+	#TryBut{
+
+	}
+}
+
+@media screen and (max-width: 1400px) {
+	button {
+		font-size: 20pt;
+	}
+	#StartBut{
+		top: 52%;
+	}
+	#InstructBut{
+		top: 57%;
+		margin-left: -75px;
+	}
+	#BackBut{
+		top: 59%;
+	}
+	#BeginBut{
+		top: 77%;
+	}
+	#TryBut{
+
+	}
+}
+
+@media screen and (max-width: 1100px) {
+	button {
+		font-size: 16pt;
+	}
+	#StartBut{
+		top: 43%;
+	}
+	#InstructBut{
+		top: 48%;
+		margin-left: -61px;
+	}
+	#BackBut{
+		top: 58%;
+	}
+	#BeginBut{
+		top: 76%;
+	}
+	#TryBut{
+
+	}
+}
+
+@media screen and (max-width: 1100px) {
+	button {
+		position: absolute;
+	}
+}
+
+
+
+

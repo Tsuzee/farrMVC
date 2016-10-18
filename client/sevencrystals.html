@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+    <script src="/socket.io/socket.io.js"></script>
+	<link href='https://fonts.googleapis.com/css?family=Orbitron' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Amaranth|Gabriela' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<title>Curse of the Seven Crystals</title>
+</head>
+<script type="text/babel" >
+        "use strict";
+<!--
+  let socket;
+  
+  const init = () => {
+    socket = io.connect();
+
+    socket.on('connect', () => {
+      console.log("Connected to server");
+    });
+    
+  } -->
+
+  window.onload = init;
+  
+  window.onkeydown = function(e) { 
+    return !(e.keyCode == 32 || e.keyCode == 38 || e.keyCode == 40);
+  };
+</script>
+<body id="projectPage">
+	
+	<main>
+		<h1 id="pageheading">Curse of the Seven Crystals</h1>
+	<div>
+		<canvas>
+			Your browser doesn't support this cool project! Please try Chrome.
+		</canvas>
+		<button id="StartBut">Start</button>
+		<button id="InstructBut">Instructions</button>
+		<button id="BackBut">Back</button>
+		<button id="BeginBut">Begin</button>
+		<button id="TryBut">Try Again</button>
+	</div>
+	
+	<section id="audioControls">
+		<audio id="bgAudio" controls loop></audio>
+		<audio id="effectAudio" controls></audio>
+	</section><br><br>
+	
+	<script src='coscjs/loader.js'></script>
+	<script src='coscjs/utilities.js'></script>
+	<script src='coscjs/emitter.js'></script>
+	<script src='coscjs/enemy.js'></script>
+	<script src='coscjs/levels.js'></script>
+	<script src='coscjs/images.js'></script>
+	<script src='coscjs/keys.js'></script>
+	<script src='coscjs/sound.js'></script>
+	<script src='coscjs/levelLoader.js'></script>
+	<script src='coscjs/drawer.js'></script>
+	<script src='coscjs/main.js'></script>
+	 
+	
+</body>
+</html>
