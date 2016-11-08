@@ -44,7 +44,27 @@ app.images = (function(){
 		"coscpictures/RubyGem.png",
 		"coscpictures/EmeraldGem.png",
 		"coscpictures/JadeGem.png",
-		"coscpictures/MorganiteGem.png"
+		"coscpictures/MorganiteGem.png",
+        "coscpictures/armor.png",   //36 Armor
+        "coscpictures/helmet.png",   //Helmet
+        "coscpictures/shield.png",   //Shield
+        "coscpictures/backpack.png",   //Backpack
+        "coscpictures/InventorySm.png",   //40 Inventory 1
+        "coscpictures/InventoryLrg.png",  //Inventory 2
+        "coscpictures/TopazGem2.png",     //42 IvenCrystal
+        "coscpictures/RubyGem2.png",
+        "coscpictures/Right4.png",	      //character player 2 images starting at [44]
+		"coscpictures/Right5.png",
+		"coscpictures/Right6.png",
+		"coscpictures/Left4.png",
+		"coscpictures/Left5.png",
+		"coscpictures/Left6.png",
+		"coscpictures/Up4.png",
+		"coscpictures/Up5.png",
+		"coscpictures/Up6.png",
+		"coscpictures/Down4.png",
+		"coscpictures/Down5.png",
+		"coscpictures/Down6.png"
 		]; //end of the imagePaths array
 		
 	// export a public interface to this module

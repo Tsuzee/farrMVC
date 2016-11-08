@@ -39,7 +39,7 @@ function loadImagesWithCallback(sources, callback) {
 		  callback(imageObjects); // send the images back
 		}
 	  };
-	  
+
 	  imageObjects[i].src = sources[i];
 	}
   }

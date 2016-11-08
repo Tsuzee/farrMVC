@@ -16,6 +16,9 @@ app.levelLoader = (function(){
 	var enemies = [];
 	var crystals = [];
 	
+  //inventory stuff
+  
+  
 	//areas that the character walks onto to move to a different area
 	var ExitRect = function(x, y, w, h, n){
 		this.posX = x;
@@ -148,15 +151,20 @@ app.levelLoader = (function(){
 	function getCrystals(){
 		return this.crystals;
 	}
+  
+  function getCharacterScreen(){
+    return this.charScreen;
+  }
 	
 	return{
-		init: init,
-		loadLevel: 		loadLevel,
-		getBackground: 	getBackground,
-		getMusic:		getMusic,
-		getExits: 		getExits,
-		getBoxes: 		getBoxes,
-		getEnemies: 	getEnemies,
-		getCrystals:	getCrystals
+		init:               init,
+		loadLevel: 		    loadLevel,
+		getBackground:   	getBackground,
+		getMusic:		    getMusic,
+		getExits: 	     	getExits,
+		getBoxes: 	     	getBoxes,
+		getEnemies: 	    getEnemies,
+		getCrystals:	    getCrystals
+        //getCharacterScreen: getCharScreen
 	};
 }());

@@ -52,6 +52,10 @@ window.addEventListener("keydown",function(e){
 	if(char == " " || char == " "){
 		app.main.attack = true;
 	}
+    //inventory
+    if(char == "c" || char == "C"){
+      app.main.charScreen();
+    }
 	//escape key
 	if(e.keyCode == 27){
 		//menu toggle

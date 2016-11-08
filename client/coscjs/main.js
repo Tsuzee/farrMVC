@@ -33,7 +33,6 @@ app.main = {
   collisions: undefined,
   sound: undefined,
   images: undefined,
-  player: undefined,
   bottle: undefined,
   bottleList: [],
   playerHit: false,
@@ -46,13 +45,8 @@ app.main = {
   bgPlaying: false,
   dt: 0,
   displayMenu: false,
-  moveLeft: false,
-  moveRight: false,
-  moveUp: false,
-  moveDown: false,
   attack: false,
   oneCombatCheck: false,
-  frameNum: 0,
   aniFrameNum: 0,
   hitFrameNum: 0,
   winFrame: 0,
@@ -67,12 +61,26 @@ app.main = {
   enemies: undefined,
   enemiesDefeated: 0,
   totalLifeLost: 0,
+  newLvlData: undefined,
+  levelDetails: undefined,
+  
+  //Player 1 properties
+  player: undefined,
+  frameNum: 0,
+  moveLeft: false,
+  moveRight: false,
+  moveUp: false,
+  moveDown: false,
+  showCharScreen: false,
+  
+  //Player 2 properties (player 2 is the "other" player)
   player2: undefined,
   frameNumP2: undefined,
   moveRightP2: undefined,
   moveLeftP2: undefined,
   moveUpP2: undefined,
   moveDownP2: undefined,
+  playerJoined: false,
 
 PLAYER: Object.freeze({
     SPEED: 120,
@@ -94,9 +102,12 @@ GAME_STATE: Object.freeze({ // another fake enumeration
   //-----------------------------------methods-------------------------------------------
   ///////////////////////////////////////////////////////////////////////////////////////
 
+  //Preloading and setup
+  ///////////////////////////////////////////////////////////////////////////////////////
   preload: function(){
       var imgArray = [];
       loadImagesWithCallback(app.images.images, function(gameImages){
+          console.log("Images: " + gameImages);
           imgArray = gameImages;
           console.log("** images all pre-loaded **");
           console.log("imageArray=" + imgArray);
@@ -129,7 +140,8 @@ GAME_STATE: Object.freeze({ // another fake enumeration
       this.update();
   },
 
-  
+  //Server Functions
+  ///////////////////////////////////////////////////////////////////////////////////////  
   updateServer: function(){
     var p2Data = {
     player2: this.player,
@@ -145,41 +157,71 @@ GAME_STATE: Object.freeze({ // another fake enumeration
   },
   
   update: function(){
-      //LOOP
-      //schedule a call to update()
-      //requestAnimationFrame(function(){app.main.update()});
+    //LOOP
+    //schedule a call to update()
+    //requestAnimationFrame(function(){app.main.update()});
     this.updateServer();
-    
+
     this.SOCKET.on('setUser', (data) => {
-    this.USER = data.name;
+      this.USER = data.name;
       console.log("USER Name is: " + this.USER);
-  });
+    });
+    
+    this.SOCKET.on('secondPlayer', () => {
+      if(!this.playerJoined){
+        this.playerJoined = true;
+        console.log("Second player joined, sending level data");
+        this.SOCKET.emit('newLevel', this.levelDetails);
+      }
+    });
   
-  
-  this.SOCKET.on('updateP2', (data) =>{
-    this.player2 = data.player2;
-    this.frameNumP2 = data.frameNumP2;
-    this.moveRightP2 = data.moveRightP2;
-    this.moveLeftP2 = data.moveLeftP2 ;
-    this.moveUpP2 = data.moveUpP2;
-    this.moveDownP2 = data.moveDownP2;
-    if(this.frameNum == 50){
-      //console.log(this.player2.health);
-    }
+    this.SOCKET.on('updateP2', (data) =>{
+      this.player2 = data.player2;
+      this.frameNumP2 = data.frameNumP2;
+      this.moveRightP2 = data.moveRightP2;
+      this.moveLeftP2 = data.moveLeftP2 ;
+      this.moveUpP2 = data.moveUpP2;
+      this.moveDownP2 = data.moveDownP2;
+      if(this.frameNum == 50){
+        //console.log(this.player2.health);
+      }
+    });
+    
+    this.SOCKET.on('updateEnemyList', (data) => {
+      this.enemies = data;
+    });
+    
+    this.SOCKET.on('updateBottleList', (data) => {
+      if(!(this.bottleList === data)){
+        this.bottleList = data;
+        for(var i = 0; i < this.bottleList.length; i++){
+          this.bottleList[i].img = this.imageArray[28];
+        }
+      }
+    });
+    
+    this.SOCKET.on('updateCrystalList', (data) => {
+      this.crystalsToCollect = data;
+    });
+    
+  this.SOCKET.on('p2Left', () => {
+    console.log("Other Player has left");
+    this.player2 = undefined;
   });
     
-    this.SOCKET.on('p2Left', () => {
-      console.log("Other Player has left");
-      this.player2 = undefined;
+    this.SOCKET.on('newLevelData', (data) =>{
+      this.newLvlData = data;
+      console.log("Received new level data");
     });
     
     //Tell the server that the player is moving
   if(this.frameNum == 50){
     if(this.player != undefined && this.player2 != undefined){
-      console.log(this.player.facing);
-      console.log(this.player2.facing);
+      //console.log("Current Level: " + this.player.levelIn);
+      //console.log(this.player.facing);
+      //console.log(this.player2.facing);
     }
-  }
+  }    
     
       this.animationID = requestAnimationFrame(this.update.bind(this));
       this.frameNum++;
@@ -267,41 +309,81 @@ GAME_STATE: Object.freeze({ // another fake enumeration
 
               break;
           }
-          ////////////////////////////////////////////////////////////////////////////////////////////
+          ///////////////////////////////////////////////////////////////////////////////////////
           case this.GAME_STATE.DEFAULT:{
-              //load level
+            //load level
+            //check to see if a player has already made this level
               if(this.newLevel){
-                  this.bottleList = [];
+                this.player.levelIn = this.currentLevel;
+                this.bottleList = [];
+                
+                //If there is a second player check if they are already in this level
+                if(this.player2 == undefined || !(this.player2.levelIn === this.currentLevel) ){
+                  console.log("creating the base level");
                   this.levelLoader.loadLevel(this.currentLevel, this.crystals);
-
-                  this.crystalsToCollect = this.levelLoader.getCrystals();
-                  this.crystalsToCollect[0].img = this.imageArray[29];
-                  this.crystalsToCollect[1].img = this.imageArray[30];
-                  this.crystalsToCollect[2].img = this.imageArray[31];
-                  this.crystalsToCollect[3].img = this.imageArray[32];
-                  this.crystalsToCollect[4].img = this.imageArray[33];
-                  this.crystalsToCollect[5].img = this.imageArray[34];
-                  this.crystalsToCollect[6].img = this.imageArray[35];
-
-                  this.newLevel = false;
-                  this.bgPlaying = false;
-                  this.bgNum = this.levelLoader.getBackground();
-                  this.musicNum = this.levelLoader.getMusic();
-                  this.lvlExits = this.levelLoader.getExits();
                   this.boxes = this.levelLoader.getBoxes();
                   this.enemy.setupEnemies();
                   this.enemies = this.enemy.getEnemies();
-                  if(this.currentLevel == 9){
-                      this.player.x = 586;
-                      this.player.y = 752;
+                  this.bgNum = this.levelLoader.getBackground();
+                  this.musicNum = this.levelLoader.getMusic();
+                  this.lvlExits = this.levelLoader.getExits();
+                  this.crystalsToCollect = this.levelLoader.getCrystals();
+                  
+                  //package level details
+                  console.log("Storing new level data");
+                  this.levelDetails = {};
+                  this.levelDetails.boxes = this.boxes;
+                  this.levelDetails.enemies = this.enemies;
+                  this.levelDetails.bgNum = this.bgNum;
+                  this.levelDetails.musicNum = this.musicNum;
+                  this.levelDetails.lvlExits = this.lvlExits;
+                  console.log(this.bottleList[0]);
+                  this.levelDetails.bottleList = this.bottleList;
+                  this.levelDetails.crystalsToCollect = this.crystalsToCollect;
+                    
+                  //send to server if there is a P2
+                  if(this.player2 != undefined){
+                    this.SOCKET.emit('newLevel', this.levelDetails);
                   }
-                  else{
-                      if(this.player.x < 10){ this.player.x = 1158;}
-                      else if(this.player.x > 1100){ this.player.x = 2;}
-                      if(this.player.y < 10){ this.player.y = 759;}
-                      else if(this.player.y > 750){ this.player.y = 6;}
+                } else {  //end p2 check
+                  if(this.newLvlData != undefined){
+                    console.log("Using new level data");
+                    this.boxes = this.newLvlData.boxes;
+                    this.enemies = this.newLvlData.enemies;
+                    this.bgNum = this.newLvlData.bgNum;
+                    this.musicNum = this.newLvlData.musicNum;
+                    this.lvlExits = this.newLvlData.lvlExits;
+                    this.bottleList = this.newLvlData.bottleList;
+                    for(var i = 0; i < this.bottleList.length; i++){
+                      this.bottleList[i].img = this.imageArray[28];
+                    }
+                    this.crystalsToCollect = this.newLvlData.crystalsToCollect;
+                  } else {
+                    console.log("New level data not found!!");
                   }
-              }
+                }
+                
+                this.newLevel = false;
+                this.bgPlaying = false;
+
+                this.crystalsToCollect[0].img = this.imageArray[29];
+                this.crystalsToCollect[1].img = this.imageArray[30];
+                this.crystalsToCollect[2].img = this.imageArray[31];
+                this.crystalsToCollect[3].img = this.imageArray[32];
+                this.crystalsToCollect[4].img = this.imageArray[33];
+                this.crystalsToCollect[5].img = this.imageArray[34];
+                this.crystalsToCollect[6].img = this.imageArray[35];
+                
+                if(this.currentLevel == 9){
+                  this.player.x = 586;
+                  this.player.y = 752;
+                } else {
+                  if(this.player.x < 10){ this.player.x = 1158;}
+                  else if(this.player.x > 1100){ this.player.x = 2;}
+                  if(this.player.y < 10){ this.player.y = 759;}
+                  else if(this.player.y > 750){ this.player.y = 6;}
+                }
+              }//end is new level
 
               //draw background
               if(this.currentLevel == 1){
@@ -358,12 +440,14 @@ GAME_STATE: Object.freeze({ // another fake enumeration
 
               //draw character
               this.drawer.drawChar(this.ctx, this.frameNum, this.moveRight, 
-                  this.moveLeft, this.moveUp, this.moveDown, this.player, this.imageArray);
+                  this.moveLeft, this.moveUp, this.moveDown, this.player, this.imageArray, 0);
             
-            //draw second player's character
-            if(this.player2 != undefined){
+            //draw second player's character (adj is used to shift the player image array
+            //                                 to the right picture for player two)
+            if(this.player2 != undefined && this.player2.levelIn == this.player.levelIn){
               this.drawer.drawChar(this.ctx, this.frameNumP2, this.moveRightP2, 
-                  this.moveLeftP2, this.moveUpP2, this.moveDownP2, this.player2, this.imageArray);
+                  this.moveLeftP2, this.moveUpP2, this.moveDownP2, 
+                  this.player2, this.imageArray, 30);
             }
             
               //check collisions with world boundaries and eneimes
@@ -401,6 +485,17 @@ GAME_STATE: Object.freeze({ // another fake enumeration
                       this.pulsarFrameNum = -1;
                   }
               }
+            
+              //draw character screen
+              this.crystalsToCollect[5].img = this.imageArray[42];
+              this.crystalsToCollect[6].img = this.imageArray[43];
+            
+              if(this.showCharScreen){
+                this.drawer.drawCharMenu(this.ctx, this.WIDTH, this.HEIGHT, 0, this.imageArray, this.crystalsToCollect);
+              }
+            
+              this.crystalsToCollect[5].img = this.imageArray[34];
+              this.crystalsToCollect[6].img = this.imageArray[35];
 
               //check to see if the character is changing levels
               this.checkNextLevel(this.lvlExits);
@@ -433,7 +528,7 @@ GAME_STATE: Object.freeze({ // another fake enumeration
               this.drawer.drawBackground(this.ctx, this.imageArray[this.bgNum], this.WIDTH, this.HEIGHT);
               //draw character
               this.drawer.drawChar(this.ctx, this.frameNum, this.moveRight, 
-                  this.moveLeft, this.moveUp, this.moveDown, this.player, this.imageArray);
+                  this.moveLeft, this.moveUp, this.moveDown, this.player, this.imageArray, 0);
               this.drawer.drawWin(this.ctx, this.WIDTH, this.HEIGHT, this.enemiesDefeated, this.totalLifeLost);
               this.winFrame++;
               if(this.winFrame > 900){
@@ -501,17 +596,18 @@ GAME_STATE: Object.freeze({ // another fake enumeration
 
   //setup the player character
   setupPlayer: function(){
-      this.player = {};
+    this.player = {};
 
-      //add properties to player
-      this.player.x = this.WIDTH/2 + 140;
-      this.player.y = this.HEIGHT/2 + 40;
-      this.player.speed = this.PLAYER.SPEED;
-      this.player.facing = 0;
-      this.player.health =  this.PLAYER.HEALTH;
-      this.player.charNum = 14;
+    //add properties to player
+    this.player.x = this.WIDTH/2 + 140;
+    this.player.y = this.HEIGHT/2 + 40;
+    this.player.speed = this.PLAYER.SPEED;
+    this.player.facing = 0;
+    this.player.health =  this.PLAYER.HEALTH;
+    this.player.charNum = 14;
+    this.player.levelIn = 1;
 
-      Object.seal(this.player);
+    Object.seal(this.player);
   },
 
   //have the player take damage
@@ -617,12 +713,29 @@ GAME_STATE: Object.freeze({ // another fake enumeration
 
           //does the enemy drop a potion??
           if( Math.floor(getRandom(1, 10)) < 3){
-              this.makeBottle(boxes[index].x, boxes[index].y);
-          }
+            this.makeBottle(boxes[index].x, boxes[index].y);
+            if(this.player2 != undefined && (this.player2.levelIn === this.currentLevel) ){
+              this.SOCKET.emit('bottle', this.bottleList);
+            }
+          }//end random for bottle
 
-          //remove enemy from list
-          boxes.splice(index, 1);
-          this.enemiesDefeated++;
+        //remove enemy from list
+        boxes.splice(index, 1);
+        this.enemiesDefeated++;
+        
+        if(this.player2 != undefined && (this.player2.levelIn === this.currentLevel) ){
+          this.SOCKET.emit('enemyDefeated', this.enemies);
+        }
+        else {
+          if(this.enemies != undefined && this.levelDetails != undefined){
+            this.levelDetails.enemies = this.enemies;
+
+            //send to server if there is a P2
+            if(this.player2 != undefined){
+              this.SOCKET.emit('newLevel', this.levelDetails);
+            }//end if p2
+          }//end if enemy list are defined
+        }//end else
       }
   },
 
@@ -679,31 +792,45 @@ GAME_STATE: Object.freeze({ // another fake enumeration
 
   //check for collision with a crystal
   crystalCollision: function(lvl){
-      if(!this.crystalsToCollect[lvl-2].pickedUp){
-          if( this.player.x < this.crystalsToCollect[lvl-2].posX + 40 && this.player.x + 40 > this.crystalsToCollect[lvl-2].posX &&
-              this.player.y < this.crystalsToCollect[lvl-2].posY + 40 && 40 + this.player.y > this.crystalsToCollect[lvl-2].posY){
-                  this.crystalsToCollect[lvl-2].pickedUp = true;
-                  this.crystals++;
+    if(!this.crystalsToCollect[lvl-2].pickedUp){
+      if( this.player.x < this.crystalsToCollect[lvl-2].posX + 40 
+         && this.player.x + 40 > this.crystalsToCollect[lvl-2].posX 
+         && this.player.y < this.crystalsToCollect[lvl-2].posY + 40 
+         && 40 + this.player.y > this.crystalsToCollect[lvl-2].posY){
+          this.crystalsToCollect[lvl-2].pickedUp = true;
+          this.crystals++;
+        
+          //update other player
+          if(this.player2 != undefined && (this.player2.levelIn === this.currentLevel) ){
+            this.SOCKET.emit('crystal', this.crystalsToCollect);
           }
       }
+    }
   },
 
   //check for bottle collisions
   bottleCollision: function(){
-      var index = -1;
-      for(var box in this.bottleList){
-              if( this.player.x < this.bottleList[box].x + 40 && this.player.x + 40 > this.bottleList[box].x &&
-                  this.player.y < this.bottleList[box].y + 40 && 40 + this.player.y > this.bottleList[box].y){
-                      if(this.player.health < 4){
-                          this.player.health +=1;
-                          index = box;
-                      }
-              }
-      }//end for loop
-      if(index > -1){
-          this.bottleList.splice(index, 1);
-          this.sound.playEffect(1);
+    var index = -1;
+    for(var box in this.bottleList){
+      if( this.player.x < this.bottleList[box].x + 40 
+         && this.player.x + 40 > this.bottleList[box].x 
+         && this.player.y < this.bottleList[box].y + 40 
+         && 40 + this.player.y > this.bottleList[box].y){
+            if(this.player.health < 4){
+              this.player.health +=1;
+              index = box;
+             }
+          }
+    }//end for loop
+    
+    if(index > -1){
+      this.bottleList.splice(index, 1);
+      this.sound.playEffect(1);
+      
+      if(this.player2 != undefined && (this.player2.levelIn === this.currentLevel) ){
+        this.SOCKET.emit('bottle', this.bottleList);
       }
+    }//end if
   },
 
   ////////////////////////////////////////////////////////////////////////////////////////////
@@ -734,11 +861,14 @@ GAME_STATE: Object.freeze({ // another fake enumeration
       this.bottle.img = this.imageArray[28];
 
       //add to the bottle list
-      this.bottleList.push(this.bottle);
+      this.bottleList.push(this.bottle);    
   },
 
+  ////////////////////////////////////////////////////////////////
+  //this may cause issues and have to be removed
   //pause the game
   pauseGame: function(){
+    /*
       this.paused = true;
 
       //stop animation
@@ -747,10 +877,14 @@ GAME_STATE: Object.freeze({ // another fake enumeration
 
       //update once
       this.update();
+      */
   },
-
+  ////////////////////////////////////////////////////////////////
+  
+  
   //resume the game
   resumeGame: function(){
+    /*
       //stop animation
       cancelAnimationFrame(this.animationID);
 
@@ -765,6 +899,13 @@ GAME_STATE: Object.freeze({ // another fake enumeration
       }
       //restart
       this.update();
+      */
+  },
+  
+  charScreen: function(){
+    this.showCharScreen = !this.showCharScreen;
+    
+    
   },
 
   //do something if the mouse is pressed on the screen

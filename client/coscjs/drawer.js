@@ -17,7 +17,8 @@ app.drawer = (function(){
 	
 	//draw the character
 	function drawChar(ctx, frameNum, moveRight, moveLeft, moveUp, 
-                       moveDown, player, imageArray){
+                       moveDown, player, imageArray, adj){
+        var adjust = adj;
 		if(moveRight || (moveRight && moveUp)){
 			if(frameNum > 0 && frameNum < 21){
 				player.charNum = 14;
@@ -80,7 +81,7 @@ app.drawer = (function(){
 			case 2: {ctx.fillRect(player.x+9, player.y-10, 10, 5);}
 			case 1: {ctx.fillRect(player.x-3, player.y-10, 10, 5);}
 		}
-		ctx.drawImage(imageArray[player.charNum], player.x, player.y, 40, 40);
+		ctx.drawImage(imageArray[adjust + player.charNum], player.x, player.y, 40, 40);
 	}//end draw character
 	
 	//draw character attack
@@ -210,7 +211,7 @@ app.drawer = (function(){
 	
 	//draw potion bottle
 	function drawBottle(ctx, bottle){
-		ctx.drawImage(bottle.img, bottle.x, bottle.y, bottle.width, bottle.height);
+      ctx.drawImage(bottle.img, bottle.x, bottle.y, bottle.width, bottle.height);
 	}
 	
 	//draw main menu text
@@ -370,21 +371,50 @@ app.drawer = (function(){
 		document.querySelector("#StartBut").style.display = "none";
 		document.querySelector("#InstructBut").style.display = "none";
 	}//end draw pause
+  
+  //draw Inventory Screen
+  function drawCharacterScreen(ctx, width, height, inventoryNum, imgs, crystals){
+
+    ctx.drawImage(imgs[40], (width/2) - 250, (height/2) - 134, 499, 268);
+    
+    ctx.drawImage(crystals[0].img, (width/2) - 200, (height/2) - 90, crystals[0].width, crystals[0].height);
+    
+    ctx.drawImage(crystals[1].img, (width/2) - 140, (height/2) - 90, crystals[0].width, crystals[0].height);
+    
+    ctx.drawImage(crystals[2].img, (width/2) - 80, (height/2) - 90, crystals[0].width, crystals[0].height);
+    
+    ctx.drawImage(crystals[3].img, (width/2) - 20, (height/2) - 90, crystals[0].width, crystals[0].height);
+    
+    ctx.drawImage(crystals[4].img, (width/2) + 40, (height/2) - 90, crystals[0].width, crystals[0].height);
+    
+    ctx.drawImage(crystals[5].img, (width/2) + 105, (height/2) - 95, crystals[0].width+5, crystals[0].height+5);
+    
+    ctx.drawImage(crystals[6].img, (width/2) + 165, (height/2) - 95, crystals[0].width+5, crystals[0].height+5);
+  }
 	
+  /*draw crystals
+	function drawCrystals(ctx, lvl, crystals){
+		if(lvl-2 > -1 && lvl-2 < 7){
+			if(!crystals[lvl-2].pickedUp){
+				ctx.drawImage(crystals[lvl-2].img, crystals[lvl-2].posX, crystals[lvl-2].posY, crystals[lvl-2].width, crystals[lvl-2].height);
+			}
+		}
+	}//end draw crystals */
 	return{
-		drawMainMenu: 		drawMainMenu,
-		drawInstructions: 	drawInstructions,
-		drawBackground:		drawBackground,
-		drawChar:			drawChar,
-		drawCharAttack:		drawCharAttack,
-		drawEnemy:			drawEnemy,
-		drawCredits:		drawCredits,
-		drawGameOver:		drawGameOver,
-		drawPauseScreen:	drawPauseScreen,
-		drawOpening:		drawOpening,
-		drawCrystals:		drawCrystals,
-		drawBottle:			drawBottle,
-		drawWin:			drawWin
+		drawMainMenu: 		  drawMainMenu,
+		drawInstructions: 	  drawInstructions,
+		drawBackground:		  drawBackground,
+		drawChar:			  drawChar,
+		drawCharAttack:		  drawCharAttack,
+		drawEnemy:			  drawEnemy,
+		drawCredits:		  drawCredits,
+		drawGameOver:		  drawGameOver,
+		drawPauseScreen:	  drawPauseScreen,
+		drawOpening:		  drawOpening,
+		drawCrystals:		  drawCrystals,
+		drawBottle:			  drawBottle,
+		drawWin:			  drawWin,
+        drawCharMenu:  drawCharacterScreen
 		
 	};
 	

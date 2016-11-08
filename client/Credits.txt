@@ -1,0 +1,82 @@
+Name of the Game: "Curse of the Seven Crystals" from 
+http://www.springhole.net/writing_roleplaying_randomators/rpgtitle.htm Curtosey of their random name generator.
+
+Weapons from
+http://img.photobucket.com/albums/v720/Zakiller2000/8-BitWeaponsSheet.png
+Compiled by Zakiller2000
+
+Monsters
+http://tinypic.com/view.php?pic=jtnrs2&s=3#.VhUTS624dyU
+
+Basic Gems Icon Set - Remix
+prdatur
+http://creativecommons.org/licenses/by/3.0/
+
+LPC Adobe Building Set
+Sharm
+http://creativecommons.org/licenses/by/3.0/  http://www.gnu.org/licenses/gpl-3.0.html
+http://www.gnu.org/licenses/old-licenses/gpl-2.0.html  http://opengameart.org/content/oga-by-30-faq
+
+Orthographic Outdoor Tiles
+Buch
+http://creativecommons.org/publicdomain/zero/1.0/
+
+LPC Style Wood Bridge
+Xenodora
+http://creativecommons.org/licenses/by-sa/3.0/  http://www.gnu.org/licenses/gpl-3.0.html
+http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+
+Fantasy Icon Pack by Ravenmore
+http://opengameart.org/content/fantasy-icon-pack-by-ravenmore-0
+https://creativecommons.org/licenses/by/3.0/
+
+Inventory/Menu Screens
+Based on Golden UI by Buch
+http://opengameart.org/content/golden-ui
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Sound
+Soliloquy
+matthew.pablo
+http://opengameart.org/content/soliloquy
+* CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+Fairy Spring
+Homingstar
+http://creativecommons.org/licenses/by-sa/3.0/
+
+The Adventures of Cendah(Full Soundtrack)
+Trevor Lentz
+http://creativecommons.org/licenses/by-sa/3.0/
+
+Battle Sound Effects
+artisticdude
+http://creativecommons.org/publicdomain/zero/1.0/
+http://creativecommons.org/licenses/by/3.0/  http://creativecommons.org/licenses/by-sa/3.0/  
+http://www.gnu.org/licenses/gpl-3.0.html     http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+
+Game Over II
+Kistol
+http://creativecommons.org/licenses/by/3.0/
+
+50 RPG Sound Effects - swing
+Kenney
+http://creativecommons.org/publicdomain/zero/1.0/
+
+Lively Meadow
+matthew.pablo
+http://creativecommons.org/licenses/by/3.0/
+
+Sound File Renaming
+Soliloquy_1 --> mainmenu
+Town 1 --> area1
+Forest --> area2
+Castle Song --> area3
+Forest of Darkness --> area4
+Undead Lands 2 --> area5
+Fairy_Spring_Tune_0 --> area6
+Undead Lands 2 --> area7
+The Cave --> area8
+Temple boss --> area9
+Game Over II_2 --> gameover
+Lively Meadow (Victory Fanfare and Song) --> win
