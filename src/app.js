@@ -66,6 +66,7 @@ const onDisconnect = (sock) => {
     delete users[socket.name];
     socket.leave('room1');
     socket.broadcast.to('room1').emit('p2Left');
+    console.log(users);
   });
 };
 
