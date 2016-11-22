@@ -2,7 +2,8 @@
   "name": "curseofthesevencrystals",
   "version": "1.0.0",
   "engines": {
-    "node": "6.5.0"
+    "node": "6.5.0",
+    "npm": "3.10.3"
   },
   "description": "Class project",
   "main": "./src/app.js",
@@ -11,8 +12,14 @@
     "pretest": "eslint ./src --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [
+    "Node",
+    "MVC",
+    "Redis",
+    "Login"
+  ],
   "author": "Darren Farr",
-  "license": "ISC",
+  "license": "GNU General Public License v3.0",
   "devDependencies": {
     "eslint": "^3.4.0",
     "eslint-config-airbnb": "^10.0.1",
@@ -23,6 +30,14 @@
     "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
     "serve-favicon": "^2.3.0",
-    "socket.io": "^1.4.8"
+    "socket.io": "^1.4.8",
+    "body-parser": "^1.15.0",
+    "connect-redis": "^3.0.2",
+    "csurf": "^1.8.3",
+    "express-handlebars": "^3.0.0",
+    "express-session": "^1.13.0",
+    "helmet": "^1.3.0",
+    "mongoose": "^4.4.6",
+    "underscore": "^1.8.3"
   }
 }

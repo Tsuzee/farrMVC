@@ -76,6 +76,7 @@ app.drawer = (function(){
 		
 		ctx.fillStyle = '#5DFC0A'; //green LED
 		switch(player.health){
+            case 5: {ctx.fillRect(player.x+45, player.y-10, 10, 5);}
 			case 4: {ctx.fillRect(player.x+33, player.y-10, 10, 5);}
 			case 3: {ctx.fillRect(player.x+21, player.y-10, 10, 5);}
 			case 2: {ctx.fillRect(player.x+9, player.y-10, 10, 5);}
@@ -224,45 +225,54 @@ app.drawer = (function(){
 		ctx.fillText("as told by Darren Farr", 1090, 780);
 		ctx.restore();
 	}//end draw menu
+  
+    function drawItem(ctx, item){
+      ctx.drawImage(item.img, item.x, item.y, 50, 50);
+    }
 	
 	//draw the game instructions
-	function drawInstructions(ctx, width, height, img){
+	function drawInstructions(ctx, width, height, img, img2){
 		ctx.save();
 		ctx.fillStyle = "black";
 		ctx.globalAlpha = 0.5;
-		ctx.rect(width/4, height/5, 2*(width/4), 2*(height/4));
+		ctx.rect(width/4, height/18, 2*(width/4), 2*(height/3)-10);
 		ctx.fill();
 		ctx.textAlign = "center";
 		ctx.textBaseline = "middle";
 		ctx.fillStyle = "white";
 		ctx.font = "40pt Gabriela";
 		ctx.globalAlpha = 1;
-		ctx.fillText("Instructions", width/2, height/4);
+		ctx.fillText("Instructions", width/2, height/12);
 		ctx.font = "20pt Gabriela";
 		ctx.textAlign = "left";
-		ctx.fillText("W/Up Arrow     - Move Up",width/2 - 175, height/4 + 40);
-		ctx.fillText("S/Down Arrow  - Move Down", width/2 - 175, height/4 + 70);
-		ctx.fillText("A/Left Arrow    - Move Left", width/2 - 175, height/4 + 100);
-		ctx.fillText("D/Right Arrow - Move Right", width/2 - 175, height/4 + 130);
-		ctx.fillText("ESC                    - Menu/Info", width/2 - 175, height/4 + 160);
-		ctx.fillText("SPACE/MOUSE - Attack", width/2 - 175, height/4 + 190);
+		ctx.fillText("W/Up Arrow     - Move Up",width/2 - 175, height/12 + 50);
+		ctx.fillText("S/Down Arrow  - Move Down", width/2 - 175, height/12 + 80);
+		ctx.fillText("A/Left Arrow     - Move Left", width/2 - 175, height/12 + 110);
+		ctx.fillText("D/Right Arrow  - Move Right", width/2 - 175, height/12 + 140);
+		ctx.fillText("SPACE/MOUSE  - Attack", width/2 - 175, height/12 + 170);
+		ctx.fillText("C                         - Character Screen", width/2 - 175, height/12 + 200);
+        ctx.fillText("E                         - Use Potion", width/2 - 175, height/12 + 230);
 		ctx.restore();
 		
 		ctx.save();
 		ctx.fillStyle = '#5DFC0A'; //green LED
-		ctx.fillRect(315, 490, 10, 5);
-		ctx.fillRect(327, 490, 10, 5);
-		ctx.fillRect(339, 490, 10, 5);
-		ctx.fillRect(351, 490, 10, 5);
+		ctx.fillRect(315, 360, 10, 5);
+		ctx.fillRect(327, 360, 10, 5);
+		ctx.fillRect(339, 360, 10, 5);
+		ctx.fillRect(351, 360, 10, 5);
 		ctx.stroke();
-		ctx.drawImage(img, 315, 500, 40, 40);
+		ctx.drawImage(img, 320, 370, 40, 40);
+        ctx.drawImage(img2, 320, 500, 40, 40);
 		ctx.font = "18pt Gabriela";
 		ctx.textAlign = "left";
 		ctx.fillStyle = "white";
-		ctx.fillText("Character Health is shown by the four", 378, 460); 
-		ctx.fillText("green bars over the character's head.", 378, 490);
-		ctx.fillText("When all are gone, the character is dead,", 378, 520);
-		ctx.fillText("and the game is over. Potions restore one bar.", 378, 550);
+		ctx.fillText("Character Health is shown by green bars", 378, 340); 
+		ctx.fillText("over the character's head. You start with 2.", 378, 370);
+		ctx.fillText("When all are gone, the character is dead,", 378, 400);
+		ctx.fillText("and the game is over. Potions restore one bar.", 378, 430);
+        ctx.fillText("Equipment will add more life bars.", 378, 460);
+        ctx.fillText("When playing with a second player, they will", 378, 520);
+        ctx.fillText("as a red haired character.", 378, 550);
 		ctx.restore();
 	}//end draw instructions
 	
@@ -373,33 +383,59 @@ app.drawer = (function(){
 	}//end draw pause
   
   //draw Inventory Screen
-  function drawCharacterScreen(ctx, width, height, inventoryNum, imgs, crystals){
+  function drawCharacterScreen(ctx, width, height, inventoryNum, imgs, crystals, items, pots, crystalInv){
 
     ctx.drawImage(imgs[40], (width/2) - 250, (height/2) - 134, 499, 268);
     
-    ctx.drawImage(crystals[0].img, (width/2) - 200, (height/2) - 90, crystals[0].width, crystals[0].height);
+    if(crystalInv.slot1) {
+    ctx.drawImage(crystals[0].img, (width/2) - 210, (height/2) - 90, crystals[0].width+5, crystals[0].height+5);
+    }
     
-    ctx.drawImage(crystals[1].img, (width/2) - 140, (height/2) - 90, crystals[0].width, crystals[0].height);
+    if(crystalInv.slot2) {
+    ctx.drawImage(crystals[1].img, (width/2) - 150, (height/2) - 90, crystals[0].width+5, crystals[0].height+5);
+    }
     
-    ctx.drawImage(crystals[2].img, (width/2) - 80, (height/2) - 90, crystals[0].width, crystals[0].height);
+    if(crystalInv.slot3) {
+    ctx.drawImage(crystals[2].img, (width/2) - 87, (height/2) - 90, crystals[0].width+5, crystals[0].height+5);
+    }
     
-    ctx.drawImage(crystals[3].img, (width/2) - 20, (height/2) - 90, crystals[0].width, crystals[0].height);
+    if(crystalInv.slot4) {
+    ctx.drawImage(crystals[3].img, (width/2) - 25, (height/2) - 90, crystals[0].width+5, crystals[0].height+5);
+    }
     
-    ctx.drawImage(crystals[4].img, (width/2) + 40, (height/2) - 90, crystals[0].width, crystals[0].height);
+    if(crystalInv.slot5) {
+    ctx.drawImage(crystals[4].img, (width/2) + 40, (height/2) - 90, crystals[0].width+5, crystals[0].height+5);
+    }
     
+    if(crystalInv.slot6) {
     ctx.drawImage(crystals[5].img, (width/2) + 105, (height/2) - 95, crystals[0].width+5, crystals[0].height+5);
+    }
     
+    if(crystalInv.slot7) {
     ctx.drawImage(crystals[6].img, (width/2) + 165, (height/2) - 95, crystals[0].width+5, crystals[0].height+5);
-  }
+    }
+    
+    if(items.armor == 1){
+      ctx.drawImage(imgs[36], (width/2) - 225, (height/2) + 40, 70, 70);
+    }
+    if(items.helmet == 1){
+      ctx.drawImage(imgs[37], (width/2) - 160, (height/2) - 25, 70, 70);
+    }
+    if(items.shield == 1){
+      ctx.drawImage(imgs[38], (width/2) - 160, (height/2) + 38, 70, 70);
+    }
+
+    if(pots > 0)
+    {
+      ctx.drawImage(imgs[28], (width/2) - 82, (height/2) - 8, 40, 40);
+    }
+
+    if(pots > 1)
+    {
+      ctx.drawImage(imgs[28], (width/2) - 82, (height/2) + 52, 40, 40);
+    }
+  }//end draw character screen
 	
-  /*draw crystals
-	function drawCrystals(ctx, lvl, crystals){
-		if(lvl-2 > -1 && lvl-2 < 7){
-			if(!crystals[lvl-2].pickedUp){
-				ctx.drawImage(crystals[lvl-2].img, crystals[lvl-2].posX, crystals[lvl-2].posY, crystals[lvl-2].width, crystals[lvl-2].height);
-			}
-		}
-	}//end draw crystals */
 	return{
 		drawMainMenu: 		  drawMainMenu,
 		drawInstructions: 	  drawInstructions,
@@ -414,6 +450,7 @@ app.drawer = (function(){
 		drawCrystals:		  drawCrystals,
 		drawBottle:			  drawBottle,
 		drawWin:			  drawWin,
+        drawItem:             drawItem,
         drawCharMenu:  drawCharacterScreen
 		
 	};

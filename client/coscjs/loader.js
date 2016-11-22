@@ -13,15 +13,16 @@ var app = app || {};
 window.onload = function(){
   console.log("window.onload called");
   
+  /*
   let socket;
   socket = io.connect();
-
+  
   socket.on('connect', () => {
     socket.emit('join',{name: new Date().getTime()});
     console.log("Connecting to server");
-  });
+  }); */
   
-  app.main.SOCKET = socket;
+  //app.main.SOCKET = socket;
   app.sound.init();
   app.levelLoader.levels = app.levels;
   app.levelLoader.init();
@@ -38,10 +39,10 @@ window.onload = function(){
 
 window.onblur = function(){
 	console.log("blur at " + Date());
-	app.main.pauseGame();
+	//app.main.pauseGame();
 };
 
 window.onfocus = function(){
 	console.log("focus at " + Date());
-	app.main.resumeGame();
+	//app.main.resumeGame();
 };

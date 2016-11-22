@@ -68,10 +68,35 @@ button:focus{
 	left: 48%;
 	margin-left: -41px;
 }
-#InstructBut{
+#Start2PBut{
 	top: 70%;
 	left: 48%;
-	margin-left: -88px;
+	margin-left: -41px;
+}
+#Start2But{
+	top: 65%;
+	left: 48%;
+	margin-left: -41px;
+}
+#InstructBut{
+	top: 75%;
+	left: 48%;
+	margin-left: -68px;
+}
+#keyLabel{
+    position: fixed;
+	top: 70%;
+	left: 48%;
+	margin-left: -241px;
+    padding-bottom: 10px;
+}
+#PKey{
+    position: fixed;
+	top: 75%;
+	left: 48%;
+	margin-left: -108px;
+    height: 20px;
+    font-size: large;
 }
 #BackBut{
 	top: 69%;
@@ -86,15 +111,42 @@ button:focus{
 	top: 900px;
 	left: 800px;
 }
-
+#logoutBut{
+  top: 92.3%;
+  left: 73.5%;
+}
+#logoutBut a{
+  color:#02D784;
+  font-family: 'Gabriela', serif;
+  font-size:25px;
+  text-align: center;
+  text-decoration: none;
+}
+#gameKey{
+  padding-top: 5px;
+  color:#02D784;
+  font-family: 'Gabriela', serif;
+  font-size:35px;
+  text-align: center;
+}
+#keyLabel{
+  padding-top: 5px;
+  color:#02D784;
+  font-family: 'Gabriela', serif;
+  font-size:35px;
+  text-align: center;
+}
 
 /*	--	Resizing Start	--	*/
 @media screen and (max-width: 1700px) {
 	#StartBut{
 		top: 60%;
 	}
-	#InstructBut{
+    #Start2PBut{
 		top: 65%;
+	}
+	#InstructBut{
+		top: 70%;
 	}
 	#BackBut{
 		top: 67%;
@@ -105,6 +157,15 @@ button:focus{
 	#TryBut{
 
 	}
+   #Star2tBut{
+		top: 60%;
+	}
+    #keyLabel{
+		top: 65%;
+	}
+	#PKey{
+		top: 70%;
+	}
 }
 
 @media screen and (max-width: 1400px) {
@@ -114,9 +175,12 @@ button:focus{
 	#StartBut{
 		top: 52%;
 	}
-	#InstructBut{
+    #Start2PBut{
 		top: 57%;
-		margin-left: -75px;
+	}
+	#InstructBut{
+		top: 62%;
+		margin-left: -65px;
 	}
 	#BackBut{
 		top: 59%;
@@ -127,6 +191,16 @@ button:focus{
 	#TryBut{
 
 	}
+    #Start2But{
+		top: 52%;
+	}
+    #keyLabel{
+		top: 57%;
+	}
+	#PKey{
+		top: 62%;
+		margin-left: -65px;
+	}
 }
 
 @media screen and (max-width: 1100px) {
@@ -136,9 +210,12 @@ button:focus{
 	#StartBut{
 		top: 43%;
 	}
-	#InstructBut{
+    #Start2PBut{
 		top: 48%;
-		margin-left: -61px;
+	}
+	#InstructBut{
+		top: 53%;
+		margin-left: -55px;
 	}
 	#BackBut{
 		top: 58%;
@@ -148,6 +225,16 @@ button:focus{
 	}
 	#TryBut{
 
+	}
+    #Start2But{
+		top: 43%;
+	}
+    #keyLabel{
+		top: 48%;
+	}
+	#PKey{
+		top: 53%;
+		margin-left: -55px;
 	}
 }
 

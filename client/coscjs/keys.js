@@ -56,6 +56,13 @@ window.addEventListener("keydown",function(e){
     if(char == "c" || char == "C"){
       app.main.charScreen();
     }
+    if(char == "e" || char == "E"){
+      app.main.usePotion();
+    }
+    //special debug key
+    if(char == "l" || char == "L"){
+      app.main.specialDebug();
+    }
 	//escape key
 	if(e.keyCode == 27){
 		//menu toggle

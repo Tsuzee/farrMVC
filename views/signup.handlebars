@@ -1,0 +1,34 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Curse of the Seven Crystals</title>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <link rel="shortcut icon" href="/assets/img/favicon.png"/>
+  <link rel="stylesheet" type="text/css" href="style2.css"/>
+</head>
+<body>
+   <h1 id="pageheading">Curse of the Seven Crystals</h1>
+  <nav><a href="/login"></a>
+    <div class="navlink"><a href="/login">Login</a><a href="/signup">Sign up</a></div>
+  </nav>
+  <br>
+  <section id="signup">
+    <form id="signupForm" name="signupForm" action="/signup" method="POST" class="mainForm">
+      <br><br><br><br><br><br>
+      <label for="username">Username: </label>
+      <input id="user" type="text" name="username" placeholder="username"/>
+      <label for="pass">Password: </label>
+      <input id="pass" type="password" name="pass" placeholder="password"/>
+      <label for="pass2">Password: </label>
+      <input id="pass2" type="password" name="pass2" placeholder="retype password"/>
+      <input type="hidden" name="_csrf" value={{csrfToken}} />
+      <a id="signupSubmit" href="#" class="formSubmit">Sign up</a>
+    </form>
+  </section>
+  <div id="message"><img id="speech" src="coscpictures/speech.png" alt="speech box"/>
+    <h3><span id="errorMessage"></span></h3><img id="character" src="coscpictures/Down1.png" alt="Blue Haired Guy"/>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
+  <script src="client.js" type="text/babel"></script>
+</body>
+</html>

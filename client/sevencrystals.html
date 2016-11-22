@@ -10,17 +10,6 @@
 </head>
 <script type="text/babel" >
         "use strict";
-<!--
-  let socket;
-  
-  const init = () => {
-    socket = io.connect();
-
-    socket.on('connect', () => {
-      console.log("Connected to server");
-    });
-    
-  } -->
 
   window.onload = init;
   
@@ -36,12 +25,20 @@
 		<canvas>
 			Your browser doesn't support this cool project! Please try Chrome.
 		</canvas>
-		<button id="StartBut">Start</button>
+		<button id="StartBut">Start 1P</button>
+        <button id="Start2PBut">Start 2P</button>
+        <button id="Start2But" style="display: none;">Start</button>
+        <label id="keyLabel" style="display: none;">Enter game key from player 1</label>
+        <input id="PKey" type="text" style="display: none;">
 		<button id="InstructBut">Instructions</button>
 		<button id="BackBut">Back</button>
 		<button id="BeginBut">Begin</button>
 		<button id="TryBut">Try Again</button>
 	</div>
+    <div id="info">
+      <label id="gameKey">Game Key: </label>
+      <button id="logoutBut"><a href="/logout">Log out</a></button>
+    </div>
 	
 	<section id="audioControls">
 		<audio id="bgAudio" controls loop></audio>

@@ -1,0 +1,7 @@
+Need to add an object for storing the level a player is currently in.
+
+if other player enters same lvl, use that data
+
+if they enter a new level make and store that data
+
+each player has stored data for the level they are in and a copy of the other level the other player is in

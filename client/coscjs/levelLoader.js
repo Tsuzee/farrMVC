@@ -15,6 +15,7 @@ app.levelLoader = (function(){
 	var boundingBoxes =[];
 	var enemies = [];
 	var crystals = [];
+    var extraItem = {};
 	
   //inventory stuff
   
@@ -48,6 +49,7 @@ app.levelLoader = (function(){
 	function init(){
 		this.levelArray = this.levels.levelsArray;
 		var myCrystals = [];
+        this.extraItem = {};
 		for(var g = 0; g < this.levels.crystalPos.length; g+=2)
 		{
 			var crystal = new Crystal(this.levels.crystalPos[g], this.levels.crystalPos[g+1], 40, 40)
@@ -107,6 +109,21 @@ app.levelLoader = (function(){
 			app.main.makeBottle(this.levels.levelsArray[levelNum - 1][index], this.levels.levelsArray[levelNum - 1][index+1]);
 			index+=2;
 		}
+      index++;
+      
+      //add extras items in if there are any
+      if(this.levels.levelsArray[levelNum - 1][index] > 0)
+        {
+          this.extraItem = {};
+          console.log("Make item " + this.levels.levelsArray[levelNum - 1][index]);
+          this.extraItem.num = this.levels.levelsArray[levelNum - 1][index];
+          this.extraItem.x = this.levels.levelsArray[levelNum - 1][index+1];
+          this.extraItem.y = this.levels.levelsArray[levelNum - 1][index+2];
+        }
+      else {
+        this.extraItem = undefined;
+      }
+      
 			
 		
 		//if the level is the starting area, add the extra character bounds
@@ -152,8 +169,8 @@ app.levelLoader = (function(){
 		return this.crystals;
 	}
   
-  function getCharacterScreen(){
-    return this.charScreen;
+  function getExtraItems(){
+    return this.extraItem;
   }
 	
 	return{
@@ -164,7 +181,7 @@ app.levelLoader = (function(){
 		getExits: 	     	getExits,
 		getBoxes: 	     	getBoxes,
 		getEnemies: 	    getEnemies,
-		getCrystals:	    getCrystals
-        //getCharacterScreen: getCharScreen
+		getCrystals:	    getCrystals,
+        getExtraItems:      getExtraItems
 	};
 }());
