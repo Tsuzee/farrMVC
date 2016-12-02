@@ -64,6 +64,11 @@ app.main = {
   newLvlData: undefined,
   levelDetails: undefined,
   setOnce: false,
+  roomName: undefined,
+  lastUpdate: 0,
+  bottleTime: 0,
+  crystalTime: 0,
+  enemyTime: 0,
   
   //Player 1 properties
   player: undefined,
@@ -226,21 +231,30 @@ GAME_STATE: Object.freeze({ // another fake enumeration
       });
 
       this.SOCKET.on('updateEnemyList', (data) => {
-        this.enemies = data;
+        if(data.time > this.enemyTime){
+          this.enemyTime = data.time;
+          this.enemies = data;
+        }
       });
 
       this.SOCKET.on('updateBottleList', (data) => {
         if(!(this.bottleList === data)){
-          this.bottleList = data;
-          for(var i = 0; i < this.bottleList.length; i++){
-            this.bottleList[i].img = this.imageArray[28];
+          if(data.time > this.bottleTime){
+            this.bottleTime = data.time;
+            this.bottleList = data;
+            for(var i = 0; i < this.bottleList.length; i++){
+              this.bottleList[i].img = this.imageArray[28];
+            }
           }
         }
       });
 
       this.SOCKET.on('updateCrystalList', (data) => {
-        this.crystalsToCollect = data.collect;
-        this.crystals = data.crystal;
+        if(data.time > this.crystalTime){
+          this.crystalTime = data.time;
+          this.crystalsToCollect = data.collect;
+          this.crystals = data.crystal;
+        }
       });
 
     this.SOCKET.on('p2Left', () => {
@@ -249,8 +263,11 @@ GAME_STATE: Object.freeze({ // another fake enumeration
     });
 
       this.SOCKET.on('newLevelData', (data) =>{
-        this.newLvlData = data;
-        console.log("Received new level data");
+        if(data.time > this.lastUpdate  ){
+          this.lastUpdate = data.time;
+          this.newLvlData = data;
+          console.log("Received new level data");
+        }
       });
 
       this.SOCKET.on('pause', () => {
@@ -322,7 +339,7 @@ GAME_STATE: Object.freeze({ // another fake enumeration
                 console.log("Player: " + app.main.playerId);
                   app.main.SOCKET = io.connect();
                   app.main.SOCKET.on('connect', () => {
-                    app.main.SOCKET.emit('join',{name: app.main.playerId});
+                    app.main.SOCKET.emit('join',{name: app.main.playerId, roomname: app.main.playerId});
                     console.log("Connecting to server");
                   });  
                 
@@ -348,10 +365,12 @@ GAME_STATE: Object.freeze({ // another fake enumeration
               document.querySelector("#Start2But").onclick = function(){
                 
                 //join a room based on your user account
-                  app.main.playerId = document.querySelector("#PKey").textContent;
+                  var key = document.querySelector("#PKey").value
+                  //app.main.playerId = document.querySelector("#PKey").value;
+                  console.log("Second Player Id is: " + app.main.playerId);
                   app.main.SOCKET = io.connect();
                   app.main.SOCKET.on('connect', () => {
-                    app.main.SOCKET.emit('join',{name: app.main.playerId});
+                    app.main.SOCKET.emit('join',{name: app.main.playerId, roomname: key});
                     console.log("Connecting to server");
                   });  
                 
@@ -359,6 +378,8 @@ GAME_STATE: Object.freeze({ // another fake enumeration
                   document.querySelector("#Start2But").style.display = "none";
                   document.querySelector("#keyLabel").style.display = "none";
                   document.querySelector("#PKey").style.display = "none";
+                
+                  app.main.SOCKET.emit('player2');
               }
               
               this.drawer.drawMainMenu(this.ctx);
@@ -380,6 +401,11 @@ GAME_STATE: Object.freeze({ // another fake enumeration
               break;
           }
           case this.GAME_STATE.OPENING:{
+            //request level details
+            
+            
+            
+            
               document.querySelector("#BeginBut").style.display = "inline";
               this.drawer.drawBackground(this.ctx, this.imageArray[1], this.WIDTH, this.HEIGHT);
               this.drawer.drawOpening(this.ctx, this.WIDTH, this.HEIGHT, this.dt);
@@ -390,7 +416,7 @@ GAME_STATE: Object.freeze({ // another fake enumeration
                   document.querySelector("#InstructBut").style.display = "none";
                   document.querySelector("#BeginBut").style.display = "none";
               }
-
+              
               break;
           }
           ///////////////////////////////////////////////////////////////////////////////////////
@@ -426,6 +452,7 @@ GAME_STATE: Object.freeze({ // another fake enumeration
                   this.levelDetails.crystalsToCollect = this.crystalsToCollect;
                   this.levelDetails.crystals = this.crystals;
                   this.levelDetails.item = this.item;
+                  this.levelDetails.time = Date.now();
                     
                   //send to server if there is a P2
                   if(this.player2 != undefined){
@@ -811,7 +838,11 @@ GAME_STATE: Object.freeze({ // another fake enumeration
           if( Math.floor(getRandom(1, 10)) < 3){
             this.makeBottle(boxes[index].x, boxes[index].y);
             if(this.player2 != undefined && (this.player2.levelIn === this.currentLevel) ){
-              this.SOCKET.emit('bottle', this.bottleList);
+              var data = {
+                bottleList: this.bottleList,
+                time: Date.now(),
+              };
+              this.SOCKET.emit('bottle', data);
             }
           }//end random for bottle
 
@@ -820,11 +851,16 @@ GAME_STATE: Object.freeze({ // another fake enumeration
         this.enemiesDefeated++;
         
         if(this.player2 != undefined && (this.player2.levelIn === this.currentLevel) ){
-          this.SOCKET.emit('enemyDefeated', this.enemies);
+          var data = {
+            enemies: this.enemies,
+            time: Date.now(),
+          };          
+          this.SOCKET.emit('enemyDefeated', data);
         }
         else {
           if(this.enemies != undefined && this.levelDetails != undefined){
             this.levelDetails.enemies = this.enemies;
+            this.levelDetails.time = Date.now();
 
             //send to server if there is a P2
             if(this.player2 != undefined){
@@ -925,7 +961,8 @@ GAME_STATE: Object.freeze({ // another fake enumeration
           if(this.player2 != undefined){
             var data = {
               collect: this.crystalsToCollect,
-              crystal: this.crystals
+              crystal: this.crystals,
+              time: Date.now(),
             };
             this.SOCKET.emit('crystal', data);
           }

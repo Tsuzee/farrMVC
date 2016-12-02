@@ -100,7 +100,6 @@ server.listen(port, (err) => {
 
 // object to hold users
 const users = {};
-let roomName = 'room1';
 
 const io = socketio(server);
 
@@ -108,97 +107,84 @@ const onJoined = (sock) => {
   const socket = sock;
   socket.on('join', (data) => {
     console.log(data.name);
-    //////////////////////////////////////////////
-    //change later
-    if (Object.keys(users).length < 0) {
-      roomName = data.name;
-    }
-    console.log(users[0]);
-    if (Object.keys(users).length > 0 && users[0] === data.name) {
-      socket.join(roomName);
+    console.log(data.roomname);
 
-      // If second player tell other player to send level data
-      if (Object.keys(users).length > 0) {
-        console.log('second player joined');
-        socket.broadcast.to(roomName).emit('secondPlayer');
-      }
+    socket.name = data.name;
+    socket.roomname = data.roomname;
 
-      users[data.name] = data.name;
-      socket.name = data.name;
-      console.log(`dataName is: ${data.name}`);
+    socket.join(data.roomname);
 
-      socket.emit('setUser', { name: Object.keys(users).length });
+    users[data.name] = data.name;
+    socket.name = data.name;
 
-      console.log(`User connected ${Object.keys(users).length}`);
-    } else {
-      socket.join(roomName);
+    console.log(`dataName is: ${data.name}`);
 
-      users[data.name] = data.name;
-      socket.name = data.name;
-      console.log(`dataName is: ${data.name}`);
+    socket.emit('setUser', { name: Object.keys(users).length });
 
-      socket.emit('setUser', { name: Object.keys(users).length });
-
-      console.log(`User connected ${Object.keys(users).length}`);
-    }
-    //////////////////////////////////////////////
+    console.log(`User connected ${Object.keys(users).length}`);
   });
 };
 
 
-//change to use array to get room name based on user disconnecting
+// change to use array to get room name based on user disconnecting
 const onDisconnect = (sock) => {
   const socket = sock;
 
   socket.on('disconnect', () => {
     console.log(`disconnecting user ${socket.name}`);
     delete users[socket.name];
-    socket.leave(roomName);
-    socket.broadcast.to(roomName).emit('p2Left');
+    socket.leave(socket.name);
+    socket.broadcast.to(socket.roomname).emit('p2Left');
     console.log(users);
   });
 };
 
-//move to client side
+// move to client side
 const playerUpdater = (sock) => {
   const socket = sock;
 
   // player position updates
   socket.on('update', (data) => {
-    socket.broadcast.to(roomName).emit('updateP2', data);
+    socket.broadcast.to(socket.roomname).emit('updateP2', data);
   });
 
   socket.on('enemyDefeated', (data) => {
-    socket.broadcast.to(roomName).emit('updateEnemyList', data);
+    socket.broadcast.to(socket.roomname).emit('updateEnemyList', data);
   });
 
   socket.on('bottle', (data) => {
     console.log('Update Bottle List');
-    socket.broadcast.to(roomName).emit('updateBottleList', data);
+    socket.broadcast.to(socket.roomname).emit('updateBottleList', data);
   });
 
   socket.on('crystal', (data) => {
     console.log('Update Crystal List');
-    socket.broadcast.to(roomName).emit('updateCrystalList', data);
+    socket.broadcast.to(socket.roomname).emit('updateCrystalList', data);
   });
 
   // new level information update
   socket.on('newLevel', (data) => {
     console.log('Sending new level data');
-    socket.broadcast.to(roomName).emit('newLevelData', data);
+    socket.broadcast.to(socket.roomname).emit('newLevelData', data);
   });
 
   // pause/resume game
   socket.on('pauseGame', () => {
-    socket.broadcast.to(roomName).emit('pause');
+    socket.broadcast.to(socket.roomname).emit('pause');
   });
 
   socket.on('resumeGame', () => {
-    socket.broadcast.to(roomName).emit('unpause');
+    socket.broadcast.to(socket.roomname).emit('unpause');
+  });
+
+  socket.on('player2', () => {
+    console.log('second player joined');
+    socket.broadcast.to(socket.roomname).emit('secondPlayer');
   });
 };
 
 io.sockets.on('connection', (socket) => {
+  console.log();
   console.log('started');
 
   onJoined(socket);

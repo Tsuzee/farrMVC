@@ -12,7 +12,8 @@ const AccountSchema = new mongoose.Schema({
     required: true,
     trim: true,
     unique: true,
-    match: /^[A-Za-z0-9_\-\.]{1,16}$/,
+    // match: /^[A-Za-z0-9_\-\.]{1,16}$/,
+    match: /^[A-Za-z0-9_\-.]{1,16}$/,
   },
   salt: {
     type: Buffer,
