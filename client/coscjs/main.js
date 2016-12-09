@@ -69,6 +69,7 @@ app.main = {
   bottleTime: 0,
   crystalTime: 0,
   enemyTime: 0,
+  mainPlayer: false,
   
   //Player 1 properties
   player: undefined,
@@ -127,6 +128,10 @@ GAME_STATE: Object.freeze({ // another fake enumeration
   },
 
   init : function() {
+      document.querySelector("#logoutBut").onclick = function(){
+        location = "/logout";
+      }
+    
       console.log("app.main.init() called");
       // initialize properties
       this.canvas = document.querySelector('canvas');
@@ -270,6 +275,10 @@ GAME_STATE: Object.freeze({ // another fake enumeration
         }
       });
 
+      this.SOCKET.on('updateEnemies', (data) => {
+        this.enemies = data;
+      });
+      
       this.SOCKET.on('pause', () => {
         this.pauseGame();
       });
@@ -374,6 +383,8 @@ GAME_STATE: Object.freeze({ // another fake enumeration
                     console.log("Connecting to server");
                   });  
                 
+                  document.querySelector("#gameKey").innerHTML = "Game Key: " + key;
+                
                   app.main.gameState = app.main.GAME_STATE.OPENING;
                   document.querySelector("#Start2But").style.display = "none";
                   document.querySelector("#keyLabel").style.display = "none";
@@ -430,6 +441,7 @@ GAME_STATE: Object.freeze({ // another fake enumeration
                 //If there is a second player check if they are already in this level
                 if(this.player2 == undefined || !(this.player2.levelIn === this.currentLevel) ){
                   console.log("creating the base level");
+                  this.mainPlayer = true;
                   this.levelLoader.loadLevel(this.currentLevel, this.crystals);
                   this.boxes = this.levelLoader.getBoxes();
                   this.enemy.setupEnemies();
@@ -461,6 +473,7 @@ GAME_STATE: Object.freeze({ // another fake enumeration
                 } else {  //end p2 check
                   if(this.newLvlData != undefined){
                     console.log("Using new level data");
+                    this.mainPlayer = false;
                     this.boxes = this.newLvlData.boxes;
                     this.enemies = this.newLvlData.enemies;
                     this.bgNum = this.newLvlData.bgNum;
@@ -594,10 +607,18 @@ GAME_STATE: Object.freeze({ // another fake enumeration
                   this.moveCharDown();
               }
 
+              //sync enemies between players 1 and 2
+              if(this.player2 != undefined && this.frameNum == 30 && this.mainPlayer){
+                if(this.player2.levelIn === this.currentLevel){
+                  this.SOCKET.emit('enemyUpdate', this.enemies);
+                }
+              }
+
               //move enemies
               for(var en in this.enemies){
                   this.enemy.moveEnemy(this.enemies[en], this.dt);
               }
+            
 
               //draw enemy
               this.drawer.drawEnemy(this.ctx, this.frameNum, this.enemies, this.imageArray);

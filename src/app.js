@@ -181,6 +181,10 @@ const playerUpdater = (sock) => {
     console.log('second player joined');
     socket.broadcast.to(socket.roomname).emit('secondPlayer');
   });
+
+  socket.on('enemyUpdate', (data) => {
+    socket.broadcast.to(socket.roomname).emit('updateEnemies', data);
+  });
 };
 
 io.sockets.on('connection', (socket) => {

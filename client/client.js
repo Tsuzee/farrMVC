@@ -18,7 +18,9 @@ $(document).ready(() => {
                 console.log("Users Unique ID: " + result.data);
                 
                 window.location = result.redirect;
-                window.sessionStorage.setItem('id', result.data);
+				var idKey = ("0000" + (Math.random()*Math.pow(36,4) << 0).toString(36)).slice(-4);
+                window.sessionStorage.setItem('id', idKey);
+				//window.sessionStorage.setItem('id', result.data);
             },
             error: (xhr, status, error) => {
                 const messageObj = JSON.parse(xhr.responseText);
